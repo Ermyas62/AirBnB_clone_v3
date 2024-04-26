@@ -27,3 +27,13 @@ class User(BaseModel, Base):
     def __init__(self, *args, **kwargs):
         """initializes user"""
         super().__init__(*args, **kwargs)
+
+    """
+    Update the method to_dict() of BaseModel to remove the password
+    key except when it’s used by FileStorage to save data to disk.
+    """
+    def __setattr__(self, key, value):
+        """set encrypted password for users"""
+        if key == 'password':
+            value = md5(value.encode()).hexdigest()
+        super().__setattr__(key, value)
